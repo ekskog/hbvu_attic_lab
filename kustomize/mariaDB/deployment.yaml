@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: mariadb
+  labels:
+    app: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb:latest
+        imagePullPolicy: IfNotPresent
+        name: mariadb
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: var-lib-mariadb
+        envFrom:
+        - secretRef:
+           name: mariadb-secrets
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30  
+      volumes:
+      - name: var-lib-mariadb
+        persistentVolumeClaim:
+          claimName: mariadb-claim

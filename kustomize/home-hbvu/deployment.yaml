@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: hbvu
+  name: home-hbvu
+  labels:
+    app: home-hbvu
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: home-hbvu
+  template:
+    metadata:
+      labels:
+        app: home-hbvu
+    spec:    
+      containers:
+      - name: home-hbvu
+        image: nginx
+        ports:
+          - containerPort: 80
+            name: "home-hbvu"
+        volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: nginx-storage
+      volumes:
+        - name: nginx-storage
+          persistentVolumeClaim:
+            claimName: hbvu-nfs

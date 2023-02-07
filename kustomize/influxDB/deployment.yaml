@@ -9,11 +9,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: influxdb
+      component: influxdb
   template:
     metadata:
       labels:
-        app: influxdb
+        component: influxdb
     spec:
       containers:
       - image: docker.io/influxdb:2.6-alpine

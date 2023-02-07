@@ -1,8 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  component: mosquitto
-  namespace: mqtt
+  labels:
+    component: mosquitto
+  name: mosquitto
+  namespace: mosquitto
 spec:
   selector:
     matchLabels:

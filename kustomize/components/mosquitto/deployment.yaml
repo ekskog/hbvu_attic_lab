@@ -1,10 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    component: mosquitto
   name: mosquitto
-  namespace: mosquitto
+  namespace: mqtt
 spec:
   selector:
     matchLabels:
@@ -26,10 +24,10 @@ spec:
         ports:
         - containerPort: 1883
         volumeMounts:
-            - name: mosquitto
+            - name: mosquitto-config
               mountPath: /mosquitto/config/mosquitto.conf
               subPath: mosquitto.conf
       volumes:
-      - name: mosquitto
-        persistentVolumeClaim:
-          claimName: mosquitto-claim
+        - name: mosquitto-config
+          configMap:
+            name: mosquitto-config

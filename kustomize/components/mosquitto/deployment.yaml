@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mosquitto
-        image: eclipse-mosquitto:2.0
+        image: lucarv/mosquitto
         resources:
           requests:
             cpu: "50m"
@@ -23,11 +23,3 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 1883
-        volumeMounts:
-            - name: mosquitto-config
-              mountPath: /mosquitto/config/mosquitto.conf
-              subPath: mosquitto.conf
-      volumes:
-        - name: mosquitto-config
-          configMap:
-            name: mosquitto-config

@@ -17,15 +17,15 @@ spec:
         component: mariadb
     spec:
       containers:
-        - name: mariadb
-          image: mariadb:latest
-          ports:
+      - name: mariadb
+        image: mariadb:latest
+        ports:
             - containerPort: 3306
-          args:
+        args:
             - --transaction-isolation=READ-COMMITTED
             - --binlog-format=ROW
             - --max-connections=1000
-          env:
+        env:
             - name: MYSQL_DATABASE
               valueFrom:
                 secretKeyRef:
@@ -46,7 +46,7 @@ spec:
                 secretKeyRef:
                   key: MYSQL_USER
                   name: mariadb-secrets
-          volumeMounts:
+        volumeMounts:
           - mountPath: /var/lib/mysql
             name: var-lib-mysql             
       restartPolicy: Always

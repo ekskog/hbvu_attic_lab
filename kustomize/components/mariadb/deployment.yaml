@@ -51,6 +51,6 @@ spec:
             name: var-lib-mysql             
       restartPolicy: Always
       volumes:
-      - name: var-lib-mariadb
+      - name: var-lib-mysql
         persistentVolumeClaim:
           claimName: mariadb-claim

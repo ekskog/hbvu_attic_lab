@@ -47,8 +47,8 @@ spec:
                   key: MYSQL_USER
                   name: mariadb-secrets
           volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: db-persistent-storage
+          - mountPath: /var/lib/mysql
+            name: var-lib-mysql             
       restartPolicy: Always
       volumes:
       - name: var-lib-mariadb

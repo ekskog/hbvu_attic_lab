@@ -19,9 +19,6 @@ spec:
       - image: docker.io/influxdb:2.6-alpine
         imagePullPolicy: IfNotPresent
         name: influxdb
-        volumeMounts:
-        - mountPath: /var/lib/influxdb
-          name: var-lib-influxdb
         envFrom:
         - secretRef:
            name: influxdb-creds
@@ -29,7 +26,10 @@ spec:
         terminationMessagePolicy: File
       dnsPolicy: ClusterFirst
       restartPolicy: Always
-      terminationGracePeriodSeconds: 30  
+      terminationGracePeriodSeconds: 30
+        volumeMounts:
+        - mountPath: /var/lib/influxdb
+          name: var-lib-influxdb      
       volumes:
       - name: var-lib-influxdb
         persistentVolumeClaim:

@@ -19,6 +19,12 @@ spec:
       - image: docker.io/influxdb:2.6-alpine
         imagePullPolicy: IfNotPresent
         name: influxdb
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"        
         envFrom:
         - secretRef:
            name: influxdb-creds

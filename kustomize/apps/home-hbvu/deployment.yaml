@@ -19,6 +19,12 @@ spec:
       containers:
       - name: home-hbvu
         image: nginx
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"        
         ports:
           - containerPort: 80
             name: "home-hbvu"

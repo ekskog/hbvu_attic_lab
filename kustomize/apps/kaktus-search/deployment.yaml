@@ -19,6 +19,12 @@ spec:
       containers:
       - name: kaktus-search
         image: qusp66/kaktus_search:0.0.1
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"        
         ports:
           - containerPort: 3333
             name: "kaktus-search"

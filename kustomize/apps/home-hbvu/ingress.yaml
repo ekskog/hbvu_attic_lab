@@ -2,18 +2,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nextcloud
-  namespace: nextcloud
+  name: home-hbvu
+  namespace: hbvu
 spec:
   ingressClassName: nginx
   rules:
-    - host: nextcloud.hbvu.local
+    - host: home.hbvu.local
       http:
         paths:
           - path: /           
             pathType: Prefix
             backend:
               service:
-                name: nextcloud
+                name: home-hbvu
                 port:
                   number: 80

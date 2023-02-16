@@ -1,11 +1,8 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: hbvu-nfs
-  labels:
-    type: local
+  name: cocobox-pv
 spec:
-  storageClassName: hbvu-nfs
   capacity:
     storage: 1Gi
   accessModes:
@@ -17,12 +14,13 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  name: home-hbvu-files
   namespace: hbvu
-  name: hbvu-nfs
 spec:
-  storageClassName: hbvu-nfs
   accessModes:
     - ReadWriteMany
+  storageClassName: ""
   resources:
     requests:
       storage: 1Gi
+  volumeName: cocobox-pv

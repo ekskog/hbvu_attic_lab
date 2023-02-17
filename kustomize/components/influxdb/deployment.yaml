@@ -16,7 +16,7 @@ spec:
         component: influxdb
     spec:
       containers:
-      - image: docker.io/influxdb:alpine
+      - image: influxdb:alpine
         imagePullPolicy: IfNotPresent
         name: influxdb
         resources:

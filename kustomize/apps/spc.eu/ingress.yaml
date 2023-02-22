@@ -2,18 +2,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: home-hbvu
+  name: spceu
   namespace: hbvu
 spec:
   ingressClassName: nginx
   rules:
-    - host: home.hbvu.local
+    - host: spceu.hbvu.local
       http:
         paths:
           - path: /           
             pathType: Prefix
             backend:
               service:
-                name: home-hbvu
+                name: spceu
                 port:
                   number: 80

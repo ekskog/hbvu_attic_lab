@@ -3,21 +3,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: hbvu
-  name: home-hbvu
+  name: spceu
   labels:
-    app: home-hbvu
+    app: spceu
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: home-hbvu
+      app: spceu
   template:
     metadata:
       labels:
-        app: home-hbvu
+        app: spceu
     spec:    
       containers:
-      - name: home-hbvu
+      - name: spceu
         image: nginx
         resources:
           requests:
@@ -27,11 +27,11 @@ spec:
             cpu: "500m"        
         ports:
           - containerPort: 80
-            name: "home-hbvu"
+            name: "spceu"
         volumeMounts:
           - mountPath: "/usr/share/nginx/html"
             name: nginx-storage
       volumes:
         - name: nginx-storage
           persistentVolumeClaim:
-            claimName: home-hbvu-files
+            claimName: spc.eu-files

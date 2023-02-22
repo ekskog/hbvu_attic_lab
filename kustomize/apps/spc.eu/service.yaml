@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: hbvu
-  name: home-hbvu
+  name: spceu
 spec:
   selector:
-    app: home-hbvu
+    app: spceu
   ports:
     - protocol: TCP
       port: 80

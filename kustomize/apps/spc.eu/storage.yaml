@@ -4,7 +4,7 @@ metadata:
   name: spc.eu-pv
 spec:
   capacity:
-    storage: 100Mi
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   nfs:

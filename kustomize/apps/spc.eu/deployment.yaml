@@ -34,4 +34,4 @@ spec:
       volumes:
         - name: nginx-storage
           persistentVolumeClaim:
-            claimName: home.hbvu-files
+            claimName: home-hbvu-files

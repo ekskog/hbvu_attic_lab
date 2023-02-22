@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: home.hbvu-pv
+  name: spc.eu-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 100Mi
   accessModes:
     - ReadWriteMany
   nfs:
     server: 192.168.1.8
-    path: "/var/media/web/hbvu"
+    path: "/var/media/web/spc.eu/public_html"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: home.hbvu-files
+  name: spc.eu-files
   namespace: hbvu
 spec:
   accessModes:
@@ -23,4 +23,4 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  volumeName: home.hbvu-pv
+  volumeName: spc.eu-pv

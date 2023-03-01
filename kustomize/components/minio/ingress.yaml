@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio
+  namespace: minio-dev
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: objects.hbvu.local
+      http:
+        paths:
+          - path: /           
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  number: 80

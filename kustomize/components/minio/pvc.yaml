@@ -1,0 +1,13 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minio-claim
+  namespace: minio-dev
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "nfs-client"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi

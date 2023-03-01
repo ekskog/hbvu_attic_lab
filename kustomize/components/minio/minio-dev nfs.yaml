@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: minio
+  name: minio
+  namespace: minio-dev # Change this value to match the namespace metadata.name
+spec:
+  containers:
+  - name: minio
+    image: quay.io/minio/minio:latest
+    resources:
+      requests:
+        cpu: "50m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"      
+    command:
+    - /bin/bash
+    - -c
+    args: 
+    - minio server /data --console-address :9090
+    volumeMounts:
+    - mountPath: /data
+      name: minio-data
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+  volumes:
+    - name: minio-data
+      persistentVolumeClaim:
+        claimName: minio-claim

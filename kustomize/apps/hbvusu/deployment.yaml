@@ -3,21 +3,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: hbvu
-  name: home-hbvu
+  name: hbvusu
   labels:
-    app: home-hbvu
+    app: hbvusu
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: home-hbvu
+      app: hbvusu
   template:
     metadata:
       labels:
-        app: home-hbvu
+        app: hbvusu
     spec:    
       containers:
-      - name: home-hbvu
+      - name: hbvusu
         image: nginx
         resources:
           requests:
@@ -27,11 +27,11 @@ spec:
             cpu: "500m"        
         ports:
           - containerPort: 80
-            name: "home-hbvu"
+            name: "hbvusu"
         volumeMounts:
           - mountPath: "/usr/share/nginx/html"
             name: nginx-storage
       volumes:
         - name: nginx-storage
           persistentVolumeClaim:
-            claimName: home.hbvu-files
+            claimName: hbvusu-files

@@ -8,7 +8,12 @@ There are about amillion blogs that explain and even proclaim the benefits of se
   
 I had a bunch of old HP desktops and laptops and a couple of Raspberry Pi's, and even a Fujitsu laptop with a broken screen (why onearth did I ever keep it...).
 
-## CLustering  
+## Clustering  
   
 I had some experience with ProxMpx through an earlier endeavour at work, so I decided to use that to give the pile of old computer junk a layer of abstaction that would allow me to manage them as a cluster.  
 Like I have done many times before, I created an USB bootable stick with a ProxMox ISO image. Then I proceeded to boot the old junk and was amused by the different choice of keys I had to press to force the machines to boot from the USB stick. But once this hurdle could be overcome, the process is fairly straight forward and it is very well-documented at inumerous blogposts on Medium and elsewhere.  
+
+## Host OS  
+  
+Despite have no familiarity with immutable OS, I decided to go with Flatcar Linux. I had read about it and it seemed like a good fit for my needs. It was surprisingly easy to get it to work and it actually booted really quickly.  
+[This is how it went](how-to-build/Flatcar VM on ProxMox.md))  

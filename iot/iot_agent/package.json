@@ -1,0 +1,17 @@
+{
+  "name": "iot_agent",
+  "version": "1.0.0",
+  "main": "app.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./dist/app.js",
+    "build": "tsc -p .",
+    "dev": "PORT=4444 nodemon -L ./src/app.ts"
+  },
+  "devDependencies": {
+    "influxdb": "^0.0.1",
+    "mqtt": "^4.3.7",
+    "nodemon": "^2.0.21",
+    "ts-node": "^10.9.1"
+  }
+}

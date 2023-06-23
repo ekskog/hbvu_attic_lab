@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: xtr
+  namespace: hbvu
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: xtr.hbvu.local
+      http:
+        paths:
+          - path: /           
+            pathType: Prefix
+            backend:
+              service:
+                name: xtr
+                port:
+                  number: 80

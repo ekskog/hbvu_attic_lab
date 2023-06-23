@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: hbvu
-  name: hbvusu
+  name: xtr
   labels:
-    app: hbvusu
+    app: xtr
 spec:
   replicas: 1
   selector:

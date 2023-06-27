@@ -77,12 +77,13 @@ sudo hostnamectl set-hostname new_flatcar_vm
 sudo vim /etc/hosts
 ```  
 Set a static IP Address by creating a file and adding the following:
-[Match]
-Name=<your interface name>  
-[Network]
-Address=192.168.1.XXX/24
-Gateway=192.168.1.1
-DNS=192.168.1.1  
+[Match]  
+Name=<your interface name>   
+[Network]  
+Address=192.168.1.XXX/24  
+Gateway=192.168.1.1  
+DNS=192.168.1.1    
+  
 
 ```bash
 sudo vim  /etc/systemd/network/10-static.network 

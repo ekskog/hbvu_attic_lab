@@ -57,22 +57,33 @@ Configure the VM using the ign file. This might take some time, wait patiently.
   Flatcar Container Linux stable 3374.2.5 is installed on /dev/sda
 ```
 
-Reboot, and when ready connect to the VM using ssh  
+Reboot, and when ready connect to the VM using ssh from the dev machine from which You used the public key on the ign file.  
 
 The newly created VM will have a sudo user called core and the hostname will be localhost. You can fix that by adding further config to the ingintion json, or manually like:  
+1. Create a new user:  
 
 ```bash  
-$ sudo useradd another_user
-$ sudo passwd another_user
-New password:
-Retype new password:
-passwd: password updated successfully
-add user to sudoers by adding the following line to /etc/sudoers.d/another_user  
-another_user ALL=(ALL) NOPASSWD:ALL
-$ sudo vim /etc/sudoers.d/another_user
-$ sudo hostnamectl set-hostname new_flatcar_vm
+sudo useradd another_user
+sudo passwd another_user
+```  
+2. Add user to sudoers by adding the following line to /etc/sudoers.d/another_user  
+another_user ALL=(ALL) NOPASSWD:ALL  
+```bash
+sudo vim /etc/sudoers.d/another_user
 ```
+3. Set the hostname  and edit /etc/hosts
+```bash
+sudo hostnamectl set-hostname new_flatcar_vm
+sudo vim /etc/hosts
+```  
+Set a static IP Address by creating a file and adding the following:
+[Match]
+Name=<your interface name>  
+[Network]
+Address=192.168.1.XXX/24
+Gateway=192.168.1.1
+DNS=192.168.1.1  
 
-Remember to also edit the /etc/hosts file to rename your host.
-
-Make this VM into a PM template, which will allow for speeding up provisioning of new VMs on the other nodes of the cluster.  
+```bash
+sudo vim  /etc/systemd/network/10-static.network 
+```

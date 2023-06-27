@@ -76,7 +76,7 @@ sudo vim /etc/sudoers.d/another_user
 sudo hostnamectl set-hostname new_flatcar_vm
 sudo vim /etc/hosts
 ```  
-Set a static IP Address by creating a file and adding the following:
+Set a static IP Address by creating a file and adding the following:  
 [Match]  
 Name=<your interface name>   
 [Network]  

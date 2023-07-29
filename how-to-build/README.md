@@ -16,10 +16,10 @@ Like I have done many times before, I created an USB bootable stick with a ProxM
 ## Host OS  
   
 Despite have no familiarity with immutable OS, I decided to go with Flatcar Linux. I had read about it and it seemed like a good fit for my needs. It was surprisingly easy to get it to work and it actually booted really quickly.  
-[flatcar](how-to-build/instructions/flatcar.md)  
+[flatcar](instructions/flatcar.md)  
 
 
 ## The K3S Cluster  
-[k3s](how-to-build/instructions/k3s.md)  
+[k3s](instructions/k3s.md)  
 
   

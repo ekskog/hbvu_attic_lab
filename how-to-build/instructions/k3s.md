@@ -12,7 +12,11 @@ curl -sfL https://get.k3s.io | sh -s - server -tls-san pifour --tls-san 192.168.
   
 Get the token to use on the agents:  
 ``` bash
-sudo cat /var/lib/rancher/k3s/server/node-token 
+sudo cat /var/lib/rancher/k3s/server/node-token
+```  
+Copy /etc/rancher/k3s/k3s.yaml onto developer's machine  
+``` bash
+export KUBECONFIG=~/.kube/config  
 ```  
   
 Check the daemon is running:  
@@ -48,5 +52,4 @@ cd /opt/bin && ./k3s-agent-uninstall.sh
 
 
 
-Copy /etc/rancher/k3s/k3s.yaml onto developer's machine  
-export KUBECONFIG=~/.kube/config  
+

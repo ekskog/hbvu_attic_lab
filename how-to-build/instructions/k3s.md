@@ -30,7 +30,7 @@ cd /opt/bin && ./k3s-uninstall.sh
 ## HA worker nodes  
 Set up ENVs  
 ``` bash
-export K3S_TOKEN=K10cd5fc2e15fe1cc72d1655af2b35fcdeebc34f174a4cc5d196440d399958b7c8d::server:SzNTX0FUVElDX0NMVVNURVI= 
+export K3S_TOKEN=K10ba42cc9535d74a39cab1c000845418428f48ed161b5ecbd946bf7761a9a9ffe2::server:SzNTX0FUVElDX0NMVVNURVI= 
 export K3S_URL=https://192.168.1.11:6443 
 export K3S_KUBECONFIG_MODE="644" 
 ``` 

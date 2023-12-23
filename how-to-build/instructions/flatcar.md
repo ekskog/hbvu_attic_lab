@@ -1,12 +1,10 @@
 # Flatcar on Proxmox
+  
+## Preparations  
 
-Get he latest ISO file for a ProxMox VM from the [Flatcar downloads](https://stable.release.flatcar-linux.net/amd64-usr/current/flatcar_production_iso_image.iso) page. Upload the iso to the NFS shared storage under templates/iso  
+1. Install a webserver on your local machine (or whatever machine you use to connect to the proxmox VMs). You need this to get the ignition config files.  
   
-Create a VM with downloaded image, use the defaults from PXE WebGUI  
-  
-Install a webserver on your local machine (or whatever machine you use to connect to the proxmox VMs. You need this to get the ignition config files.  
-  
-Create an ignition file to allow for ssh login with a ssh key (get the key from your dev machine) with the content below and omve this file to wherever your webserver serves files (e.g. /var/www/html):  
+2. Create an ignition file to allow for ssh login with a ssh key (get the key from your dev machine) with the content below and omve this file to wherever your webserver serves files (e.g. /var/www/html):  
 
 ```json
 {
@@ -24,9 +22,15 @@ Create an ignition file to allow for ssh login with a ssh key (get the key from 
     ]
   }
 }
-```  
+```    
+
+3. Get he latest ISO file for a ProxMox VM from the [Flatcar downloads](https://stable.release.flatcar-linux.net/amd64-usr/current/flatcar_production_iso_image.iso) page. Upload the iso to the NFS shared storage under templates/iso  
+
+## ON PVE  
   
-Get the ignition config file from the webserver  
+1. Create a VM with downloaded image, use the defaults from PXE WebGUI (maybe use 2 cores on the cpu). This shouldn't take more than a few minutes. When created, start the VM, take note of the assigned IP Address on the console.
+  
+2. Get the ignition config file from the webserver  
 
  ``` bash
     $ curl -LO http://<YOUR_WEBSERVER ROOT>/<YOUR .ign FILE>
@@ -35,7 +39,7 @@ Get the ignition config file from the webserver
       100   764  100   764    0     0  29796      0 --:--:-- --:--:-- --:--:-- 30560
 ```  
 
-Identify the disk attached to the VM. In my case it was /dev/sda.
+3. Identify the disk attached to the VM. In my case it was /dev/sda.
 
 ``` bash
     $ sudo lsblk
@@ -46,7 +50,7 @@ Identify the disk attached to the VM. In my case it was /dev/sda.
 
 ```  
 
-Configure the VM using the ign file. This might take some time, wait patiently.  
+4. Configure the VM using the ign file. This might take some time, wait patiently.  
 
 ```bash
   $ sudo flatcar-install -d <YOUR DISK> -i <YOUR IGN FILE>  
@@ -57,9 +61,12 @@ Configure the VM using the ign file. This might take some time, wait patiently.
   Flatcar Container Linux stable 3374.2.5 is installed on /dev/sda
 ```
 
-Reboot, and when ready connect to the VM using ssh from the dev machine from which You used the public key on the ign file.  
+5. Reboot, and when done connect to the VM using ssh from the dev machine from which You used the public key on the ign file.  
 
-The newly created VM will have a sudo user called core and the hostname will be localhost. You can fix that by adding further config to the ingintion json, or manually like:  
+## Configure for usability  
+  
+The newly created VM will have a sudo user called core and the hostname will be localhost. You can fix that by adding further config to the ignition json, or manually as below:  
+  
 1. Create a new user:  
 
 ```bash  

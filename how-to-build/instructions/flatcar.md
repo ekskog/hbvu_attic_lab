@@ -6,7 +6,7 @@ Create a VM with downloaded image, use the defaults from PXE WebGUI
   
 Install a webserver on your local machine (or whatever machine you use to connect to the proxmox VMs. You need this to get the ignition config files.  
   
-Create an ignition file to allow for ssh login with a ssh key with the content brlow and omve this file to wherever your webserver serves files (e.g. /var/www/html):  
+Create an ignition file to allow for ssh login with a ssh key (get the key from your dev machine) with the content below and omve this file to wherever your webserver serves files (e.g. /var/www/html):  
 
 ```json
 {
@@ -18,7 +18,7 @@ Create an ignition file to allow for ssh login with a ssh key with the content b
       {
         "name": "core",
         "sshAuthorizedKeys": [
-          "<THE PUBLIC KEY TO USE>"
+          "<THE PUBLIC KEY TO USE> usually this is under the .ssh folder on a file called id_rsa.pub"
         ]
       }
     ]

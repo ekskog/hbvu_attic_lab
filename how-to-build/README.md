@@ -24,4 +24,4 @@ I called my project HBVU, which is an abbreviation for our address. I decided to
 
 [front end](instructions/front-end.md)  
 
-![Image](instructions/minio-k3s-topology.drawio.svg)  
+![Image](instructions/topology.svg)  

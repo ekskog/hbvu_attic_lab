@@ -6,7 +6,7 @@ There are about amillion blogs that explain and even proclaim the benefits of se
 
 ## The Hardware  
   
-I had a bunch of old HP desktops and laptops and a couple of Raspberry Pi's, and even a Fujitsu laptop with a broken screen (why onearth did I ever keep it...).
+I had a bunch of old HP desktops and laptops and a couple of Raspberry Pi's, and even a Fujitsu laptop with a broken screen (why on earth did I ever keep it...).
 
 ## Clustering  
   

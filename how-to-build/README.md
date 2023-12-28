@@ -6,7 +6,7 @@ There are about amillion blogs that explain and even proclaim the benefits of se
 
 ## The Hardware  
   
-I had a bunch of old HP desktops and laptops and a couple of Raspberry Pi's, and even a Fujitsu laptop with a broken screen (why on earth did I ever keep it...).
+I had a bunch of old HP desktops and laptops and a couple of Raspberry Pi's, and even a Fujitsu laptop with a broken screen (why on earth did I ever keep it...)
 
 ## Clustering  
   
@@ -15,11 +15,13 @@ Like I have done many times before, I created an USB bootable stick with a ProxM
 
 ## Host OS  
   
-Despite have no familiarity with immutable OS, I decided to go with Flatcar Linux. I had read about it and it seemed like a good fit for my needs. It was surprisingly easy to get it to work and it actually booted really quickly.  
+Despite havimg no familiarity with immutable OS, I decided to go with Flatcar Linux. I had read about it and it seemed like a good fit for my needs. It was surprisingly easy to get it to work and it actually booted really quickly.  
 [flatcar](instructions/flatcar.md)  
 
+## Front End  
+  
+I called my project HBVU, which is an abbreviation for our address. I decided to use one of the raspberry pi 4 as a proxy server also terminating TLS. 
 
-## The K3S Cluster  
-[k3s](instructions/k3s.md)  
+[front end](instructions/front-end.md)  
 
   

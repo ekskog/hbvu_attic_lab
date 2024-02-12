@@ -155,3 +155,4 @@ spec:
         - name: nfs-storage
           hostPath:
             path: /var/media/minio-ccb                  
+  

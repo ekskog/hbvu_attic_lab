@@ -4,7 +4,7 @@ metadata:
   name: hbvue
   namespace: webapps
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: hbvue
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: hbvue
-        image: lucarv/365vue:0.0.2
+        image: lucarv/365vue:latest
         ports:
         - containerPort: 80
 ---

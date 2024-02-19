@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: subsonic-deployment
+  namespace: subsonic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: subsonic
+  template:
+    metadata:
+      labels:
+        app: subsonic
+    spec:
+      containers:
+      - name: subsonic
+        image: stuckj/subsonic:latest
+        ports:
+        - containerPort: 4040
+        env:
+        - name: SUBSONIC_PORT
+          value: "4040"
+        - name: SUBSONIC_MAX_MEMORY
+          value: "512"
+        - name: SUBSONIC_UID
+          value: "33"
+        - name: SUBSONIC_GID
+          value: "33"
+        volumeMounts:
+        - name: subsonic-music
+          mountPath: /var/music
+        - name: subsonic-playlists
+          mountPath: /var/playlists
+        - name: subsonic-data
+          mountPath: /var/subsonic
+      volumes:
+      - name: subsonic-music
+        persistentVolumeClaim:
+          claimName: subsonic-music-pvc
+      - name: subsonic-playlists
+        hostPath:
+          path: /data/playlists
+      - name: subsonic-data
+        hostPath:
+          path: /data/subsonic-data

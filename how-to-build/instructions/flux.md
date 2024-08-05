@@ -7,7 +7,7 @@ $ flux install
   
 Create a file named git-source.yaml with the following content:  
 ```text  
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
   name: hbvu-attic-lab
@@ -23,7 +23,7 @@ $ kubectl apply -f git-source.yaml
   
 # Create Kustomization Resource (for each resource):  
 ```text  
-apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: xtr-app

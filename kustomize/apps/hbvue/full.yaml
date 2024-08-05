@@ -33,17 +33,4 @@ spec:
         ports:
         - containerPort: 80
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: hbvue-svc
-  namespace: hbvu
-spec:
-  selector:
-    app: hbvue
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
----
 

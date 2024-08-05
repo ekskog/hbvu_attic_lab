@@ -5,7 +5,7 @@ metadata:
   name: hbvue
 spec:
   selector:
-    app: xtr
+    app: hbvue
   ports:
     - protocol: TCP
       port: 80

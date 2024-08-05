@@ -32,5 +32,3 @@ spec:
         image: lucarv/365vue:latest
         ports:
         - containerPort: 80
----
-

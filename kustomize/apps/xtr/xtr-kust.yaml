@@ -1,3 +1,45 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: xtr-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 192.168.1.8
+    path: "/var/media/web/xtr"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: xtr-files
+  namespace: hbvu
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: xtr-pv
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: hbvu
+  name: xtr
+spec:
+  selector:
+    app: xtr
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+  type: LoadBalancer    
+---
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -1,18 +1,15 @@
 INSTALL
 curl -s https://fluxcd.io/install.sh | sudo bash (or brew)
 
-$ k create ns flux-system 
-$ export GITHUB_TOKEN=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 
-$ export GITHUB_USER=thisistayo
-$ export GITHUB_REPO=attic-flux
-
-
-flux bootstrap github --owner=${GITHUB_USER} --repository=${GITHUB_REPO} --branch=main --personal=true --path=clusters/attic
+$ k create ns flux-system  
+  
+$ export GITHUB_TOKEN=REDACTED   
+$ export GITHUB_USER=thisistayo  
+$ export GITHUB_REPO=attic-flux  
 
 $ flux bootstrap github --owner=${GITHUB_USER} --repository=attic-flux  --private=false --personal=true --path=./clusters/attic  
 
-REPO GETS CREATED BY BOOTSTRAPPING BUT IT IS PRIVATE, MIGHT NEED TO CHANGE TO PUBLIC
-
+ 
 git clone https://github.com/qusp66/flux
 cd flux
 git config credential.username $GITHUB_USER

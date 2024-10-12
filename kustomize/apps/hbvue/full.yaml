@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: hbvu
+  namespace: webapps
   name: hbvue
 spec:
   selector:
@@ -16,7 +16,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hbvue
-  namespace: hbvu
+  namespace: webapps
 spec:
   replicas: 2
   selector:

@@ -6,7 +6,7 @@ metadata:
   name: blotpix2minio
 spec:
   selector:
-    app: image-uloader
+    app: blotpix2minio
   ports:
     - protocol: TCP
       port: 3000

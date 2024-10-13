@@ -1,0 +1,46 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: webapps
+  name: image-uploader
+spec:
+  selector:
+    app: image-uloader
+  ports:
+    - protocol: TCP
+      port: 3000
+      name: http
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: webapps
+  name: image-uploader
+  labels:
+    app: image-uploader
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-uploader
+  template:
+    metadata:
+      labels:
+        app: image-uploader
+    spec:
+      containers:
+      - name: image-uploader
+        image: lucarv/blotupl4:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 3000
+            name: "image-uploader
+"

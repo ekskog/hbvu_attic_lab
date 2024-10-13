@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: webapps
-  name: image-uploader
+  name: blotpix2minio
 spec:
   selector:
     app: image-uloader
@@ -17,21 +17,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: webapps
-  name: image-uploader
+  name: blotpix2minio
   labels:
-    app: image-uploader
+    app: blotpix2minio
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: image-uploader
+      app: blotpix2minio
   template:
     metadata:
       labels:
-        app: image-uploader
+        app: blotpix2minio
     spec:
       containers:
-      - name: image-uploader
+      - name: blotpix2minio
         image: lucarv/blotupl4:latest
         imagePullPolicy: Always
         resources:
@@ -42,5 +42,5 @@ spec:
             cpu: "500m"
         ports:
           - containerPort: 3000
-            name: "image-uploader
+            name: "blotpix2minio
 "

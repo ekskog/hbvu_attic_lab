@@ -13,3 +13,5 @@ spec:
       name: console
   selector:
     app: minio
+  type:
+    LoadBalancer  

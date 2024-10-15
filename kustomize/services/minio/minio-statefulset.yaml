@@ -5,7 +5,7 @@ metadata:
   namespace: minio-system
 spec:
   serviceName: minio-headless
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
       app: minio

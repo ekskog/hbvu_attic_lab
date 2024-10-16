@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio-headless
-  namespace: minio-system
+  namespace: apps-backend
 spec:
   clusterIP: None
   ports:

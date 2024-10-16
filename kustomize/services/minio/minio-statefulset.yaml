@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: minio
-  namespace: minio-system
+  namespace: apps-backend
 spec:
   serviceName: minio-headless
   replicas: 2

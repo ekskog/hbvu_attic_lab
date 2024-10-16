@@ -5,7 +5,7 @@ metadata:
   namespace: apps-backend
 spec:
   serviceName: minio-headless
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: minio
@@ -21,7 +21,7 @@ spec:
         - server
         - --console-address
         - :9001
-        - http://minio-{0...3}.minio-headless.minio-system.svc.cluster.local/data
+        - http://minio-{0...2}.minio-headless.minio-system.svc.cluster.local/data
         ports:
         - containerPort: 9000
         - containerPort: 9001

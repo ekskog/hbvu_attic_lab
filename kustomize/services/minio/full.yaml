@@ -20,6 +20,8 @@ spec:
       name: minio
   selector:
     app: minio
+  type:
+    NodePort      
 ---
 apiVersion: v1
 kind: Service

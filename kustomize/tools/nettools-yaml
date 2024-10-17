@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dockernettools
+  namespace: tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dockernettools
+  template:
+    metadata:
+      labels:
+        app: dockernettools
+    spec:
+      containers:
+      - name: dockernettools
+        image: yenigul/dockernettools
+        command: ["sh", "-c", "tail -f /dev/null"]

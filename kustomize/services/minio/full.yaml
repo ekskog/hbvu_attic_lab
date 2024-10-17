@@ -20,8 +20,6 @@ spec:
       name: minio
   selector:
     app: minio
-  type:
-    NodePort      
 ---
 apiVersion: v1
 kind: Service
@@ -39,7 +37,7 @@ spec:
   selector:
     app: minio
   type:
-    LoadBalancer  
+    NodePort  
 ---
 apiVersion: apps/v1
 kind: StatefulSet

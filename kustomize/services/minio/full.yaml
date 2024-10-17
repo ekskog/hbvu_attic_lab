@@ -5,8 +5,8 @@ metadata:
   namespace: minio
 type: Opaque
 stringData:
-  root-user: lucarv
-  root-password: lucaPWD$MinI0
+  root-user: tempusr
+  root-password: temppwd
 ---
 apiVersion: v1
 kind: Service

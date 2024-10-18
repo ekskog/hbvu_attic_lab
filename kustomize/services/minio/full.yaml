@@ -62,3 +62,20 @@ spec:
       targetPort: console-port # Reference to the console port by name
   selector:
     app: minio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-nodeport-service
+  namespace: minio
+spec:
+  type: NodePort
+  ports:
+    - port: 9000     # MinIO port
+      targetPort: 9000
+      nodePort: 30001  # This will be the port exposed on the node (choose a port between 30000-32767)
+    - port: 9001     # MinIO console port (if needed)
+      targetPort: 9001
+      nodePort: 30002  # Same for the console, if you need it
+  selector:
+    app: minio

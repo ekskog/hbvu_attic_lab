@@ -8,7 +8,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /mnt/nfs/2000/minio
+    path: /mnt/usb/2000/minio
     server: elite
 ---
 apiVersion: v1

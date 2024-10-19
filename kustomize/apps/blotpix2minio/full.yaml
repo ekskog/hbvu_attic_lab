@@ -6,9 +6,9 @@ metadata:
   name: minio-credentials
 type: Opaque
 stringData:
-  accessKey: bHVjYXJ2
-  secretKey: bHVjYVBXRCRNaW5JMA==
-  endpoint: bWluaW8tc2VydmljZS5taW5pby5zdmMuY2x1c3Rlci5sb2NhbA==
+  accessKey: lucarv
+  secretKey: lucaPWD$MinIo
+  endpoint: minio-service.minio.svc.cluster.local
 ---
 apiVersion: v1
 kind: Service

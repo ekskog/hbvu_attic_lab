@@ -1,5 +1,32 @@
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: minio-nfs-pv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/nfs/2000/minio
+    server: elite
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-nfs-pvc
+  namespace: minio
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: ""
+  volumeName: minio-nfs-pv
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: minio-secret
@@ -47,6 +74,13 @@ spec:
                 secretKeyRef:
                   name: minio-secret
                   key: root-password
+          volumeMounts:
+              - name: nfs-storage
+                mountPath: /data
+          volumes:
+            - name: minio-nfs-storage
+              persistentVolumeClaim:
+                claimName: minio-nfs-pvc
 ---
 apiVersion: v1
 kind: Service

@@ -33,7 +33,9 @@ spec:
             - --console-address=:9001
           ports:
             - containerPort: 9000
+              name: minio-port  # Add this line
             - containerPort: 9001
+              name: console-port  # Add this line
           env:
             - name: MINIO_ROOT_USER
               valueFrom:

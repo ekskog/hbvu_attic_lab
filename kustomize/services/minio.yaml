@@ -75,7 +75,7 @@ spec:
                   name: minio-secret
                   key: root-password
           volumeMounts:
-              - name: nfs-storage
+              - name: minio-nfs-storage
                 mountPath: /data
           volumes:
             - name: minio-nfs-storage

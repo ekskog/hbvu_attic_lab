@@ -6,8 +6,8 @@ metadata:
   namespace: minio
 type: Opaque
 data:
-  root-user: lucarv
-  root-password: lucaPWD$MinI0
+  root-user: bHVjYXJ2
+  root-password: bHVjYVBXRCRNaW5JMA==
 ---
 apiVersion: apps/v1
 kind: Deployment

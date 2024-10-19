@@ -6,9 +6,9 @@ metadata:
   name: minio-credentials
 type: Opaque
 stringData:
-  accessKey: your-access-key-here
-  secretKey: your-secret-key-here
-  endpoint: your-minio-endpoint-here
+  accessKey: bHVjYXJ2
+  secretKey: bHVjYVBXRCRNaW5JMA==
+  endpoint: bWluaW8tc2VydmljZS5taW5pby5zdmMuY2x1c3Rlci5sb2NhbA==
 ---
 apiVersion: v1
 kind: Service

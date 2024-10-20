@@ -73,9 +73,30 @@ spec:
                 secretKeyRef:
                   name: minio-secret
                   key: root-password
+            - name: MINIO_API_REQUEST_SIZE
+              value: "1073741824"  # 1GB in bytes
+            - name: MINIO_BROWSER_UPLOAD_SIZE_LIMIT
+              value: "5368709120"  # 5GB in bytes
+            - name: MINIO_DISK_USAGE_CRAWL_DELAY
+              value: "10"
+            - name: MINIO_DISK_USAGE_CRAWL_CYCLE
+              value: "24h"
+            - name: MINIO_API_CONCURRENT_REQUESTS
+              value: "100"
+            - name: MINIO_CACHE_EXPIRY
+              value: "72h"
+            - name: MINIO_CACHE_EXCLUDE
+              value: "*.pdf,*.mp4"
           volumeMounts:
             - name: nfs-storage
               mountPath: /data
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
       volumes:
         - name: nfs-storage
           persistentVolumeClaim:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: minio-nfs-pv
+  name: minio-nfspv
 spec:
   capacity:
     storage: 500Gi
@@ -14,7 +14,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: minio-nfs-pvc
+  name: minio-nfspvc
   namespace: minio
 spec:
   accessModes:
@@ -23,7 +23,7 @@ spec:
     requests:
       storage: 500Gi
   storageClassName: ""
-  volumeName: minio-nfs-pv
+  volumeName: minio-nfspv
 ---
 apiVersion: v1
 kind: Secret
@@ -85,10 +85,8 @@ spec:
               value: "100"
             - name: MINIO_CACHE_EXPIRY
               value: "72h"
-            - name: MINIO_CACHE_EXCLUDE
-              value: "*.pdf,*.mp4"
           volumeMounts:
-            - name: nfs-storage
+            - name: 500-store
               mountPath: /data
           resources:
             requests:
@@ -98,9 +96,9 @@ spec:
               memory: "2Gi"
               cpu: "1"
       volumes:
-        - name: nfs-storage
+        - name: 500-store
           persistentVolumeClaim:
-            claimName: minio-nfs-pvc
+            claimName: minio-nfspvc
 ---
 apiVersion: v1
 kind: Service

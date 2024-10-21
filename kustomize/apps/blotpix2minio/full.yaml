@@ -7,7 +7,7 @@ metadata:
 type: Opaque
 stringData:
   accessKey: lucarv
-  secretKey: lucaPWD$MinIo
+  secretKey: lucaPWD$MinI0
   endpoint: 192.168.1.200
 ---
 apiVersion: v1

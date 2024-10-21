@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: webapps
+  name: blotuplr-fe
+spec:
+  selector:
+    app: blotuplr-fe
+  ports:
+    - protocol: TCP
+      port: 3000
+      name: http
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: webapps
+  name: blotuplr-fe
+  labels:
+    app: blotuplr-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blotuplr-fe
+  template:
+    metadata:
+      labels:
+        app: blotuplr-fe
+    spec:
+      containers:
+      - name: blotuplr-fe
+        image: lucarv/blotupl4_fe:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 3000
+            name: blotuplr-fe

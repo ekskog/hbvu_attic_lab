@@ -3,10 +3,10 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: webapps
-  name: blotuplr-fe
+  name: blotpix-fe
 spec:
   selector:
-    app: blotuplr-fe
+    app: blotpix-fe
   ports:
     - protocol: TCP
       port: 80
@@ -17,21 +17,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: webapps
-  name: blotuplr-fe
+  name: blotpix-fe
   labels:
-    app: blotuplr-fe
+    app: blotpix-fe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blotuplr-fe
+      app: blotpix-fe
   template:
     metadata:
       labels:
-        app: blotuplr-fe
+        app: blotpix-fe
     spec:
       containers:
-      - name: blotuplr-fe
+      - name: blotpix-fe
         image: lucarv/blotupl4_fe:latest
         imagePullPolicy: Always
         resources:
@@ -42,4 +42,4 @@ spec:
             cpu: "500m"
         ports:
           - containerPort: 80
-            name: blotuplr-fe
+            name: blotpix-fe

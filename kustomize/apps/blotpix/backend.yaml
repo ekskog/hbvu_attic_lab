@@ -14,10 +14,10 @@ apiVersion: v1
 kind: Service
 metadata:
   namespace: webapps
-  name: blotpix2minio
+  name: blotpix-fe
 spec:
   selector:
-    app: blotpix2minio
+    app: blotpix-fe
   ports:
     - protocol: TCP
       port: 3000
@@ -28,21 +28,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: webapps
-  name: blotpix2minio
+  name: blotpix-fe
   labels:
-    app: blotpix2minio
+    app: blotpix-fe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blotpix2minio
+      app: blotpix-fe
   template:
     metadata:
       labels:
-        app: blotpix2minio
+        app: blotpix-fe
     spec:
       containers:
-      - name: blotpix2minio
+      - name: blotpix-fe
         image: lucarv/blotupl4:latest
         imagePullPolicy: Always
         resources:
@@ -53,7 +53,7 @@ spec:
             cpu: "500m"
         ports:
           - containerPort: 3000
-            name: blotpix2minio
+            name: blotpix-fe
         env:
           - name: MINIO_ACCESS_KEY
             valueFrom:

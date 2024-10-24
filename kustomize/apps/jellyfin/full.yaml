@@ -1,19 +1,18 @@
-# jellyfin-pv.yaml
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: jellyfin-nfspv
-  namespace: jellyfin
 spec:
   capacity:
-    storage: 100Gi  # Adjust as necessary
+    storage: 500Gi
   accessModes:
-    - ReadWriteMany  # Allow multiple pods to read/write
+    - ReadWriteMany
   nfs:
-    path: /mnt/usb/500/music  # Adjust this to your NFS path
-    server: elite  # Replace with your NFS server's IP address
+    path: /mnt/usb/500/music
+    server: elite
+  persistentVolumeReclaimPolicy: Retain
 ---
-# jellyfin-pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -24,11 +23,45 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi  # Adjust as necessary
+      storage: 500Gi
   storageClassName: ""
   volumeName: jellyfin-nfspv
 ---
-# jellyfin-deployment.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jellyfin-config
+  namespace: jellyfin
+data:
+  system.xml: |
+    <?xml version="1.0" encoding="utf-8"?>
+    <ServerConfiguration>
+      <System>
+        <PublicPort>8096</PublicPort>
+        <EnableHttps>false</EnableHttps>
+        <PreferredLanguage>en</PreferredLanguage>
+      </System>
+    </ServerConfiguration>
+  users.xml: |
+    <Users>
+      <User>
+        <Name>admin</Name>
+        <Id>1</Id>
+        <Policy>
+          <IsAdministrator>true</IsAdministrator>
+        </Policy>
+      </User>
+    </Users>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jellyfin-user-credentials
+  namespace: jellyfin
+type: Opaque
+data:
+  admin-password: bXlzZWN1cmVwYXNzd29yZA== # Base64 encoded for "mysecurepassword"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,29 +78,58 @@ spec:
         app: jellyfin
     spec:
       containers:
-      - name: jellyfin
-        image: jellyfin/jellyfin:latest
-        ports:
-        - containerPort: 8096
-        volumeMounts:
-        - name: jellyfin-storage
-          mountPath: /media
+        - name: jellyfin
+          image: jellyfin/jellyfin:latest
+          ports:
+            - containerPort: 8096
+              name: http
+            - containerPort: 8920
+              name: https
+          env:
+            - name: JELLYFIN_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jellyfin-user-credentials
+                  key: admin-password
+          volumeMounts:
+            - name: media
+              mountPath: /media
+            - name: config
+              mountPath: /config
+            - name: jellyfin-secret
+              mountPath: /config/secret
+              subPath: admin-password
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
       volumes:
-      - name: jellyfin-storage
-        persistentVolumeClaim:
-          claimName: jellyfin-nfspvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: jellyfin-nfspvc
+        - name: config
+          configMap:
+            name: jellyfin-config
+        - name: jellyfin-secret
+          secret:
+            secretName: jellyfin-user-credentials
 ---
-# jellyfin-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: jellyfin
+  name: jellyfin-service
   namespace: jellyfin
 spec:
-  type: LoadBalancer  # Use LoadBalancer if your environment supports it
+  type: LoadBalancer
   ports:
-    - port: 8096
+    - name: http
+      port: 8096
       targetPort: 8096
-      protocol: TCP
+    - name: https
+      port: 8920
+      targetPort: 8920
   selector:
     app: jellyfin

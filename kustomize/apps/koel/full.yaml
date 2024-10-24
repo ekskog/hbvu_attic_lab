@@ -1,0 +1,118 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: koel-nfspv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/music
+    server: elite
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: koel-nfspvc
+  namespace: koel
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 500Gi
+  storageClassName: ""  # No storage class
+  volumeName: koel-nfspv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: koel-configpv
+spec:
+  capacity:
+    storage: 1Gi  # Adjust size as necessary
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/music/koelcfg  # Path for configuration
+    server: elite
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: koel-configpvc
+  namespace: koel
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi  # Adjust size as necessary
+  storageClassName: ""  # No storage class
+  volumeName: koel-configpv
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koel
+  namespace: koel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: koel
+  template:
+    metadata:
+      labels:
+        app: koel
+    spec:
+      containers:
+        - name: koel
+          image: phanan/koel:latest
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: DB_CONNECTION
+              value: sqlite
+            - name: DB_DATABASE
+              value: /config/koel.db
+            - name: KOEL_PATH
+              value: /media  # Set to the mount path of your media
+          volumeMounts:
+            - name: media
+              mountPath: /media
+            - name: config
+              mountPath: /config
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: koel-nfspvc
+        - name: config
+          persistentVolumeClaim:
+            claimName: koel-configpvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: koel-service
+  namespace: koel
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: koel

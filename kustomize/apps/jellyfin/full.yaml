@@ -21,7 +21,7 @@ metadata:
   namespace: jellyfin
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 100Gi  # Adjust as necessary

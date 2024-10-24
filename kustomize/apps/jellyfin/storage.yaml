@@ -37,7 +37,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /mnt/usb/500/jellyfin-config  # Change this path as needed for configuration
+    path: /mnt/usb/500/music/jellyfin-config  # Change this path as needed for configuration
     server: elite
   persistentVolumeReclaimPolicy: Retain
 ---

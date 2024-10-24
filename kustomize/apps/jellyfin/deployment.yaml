@@ -32,10 +32,7 @@ spec:
             - name: media
               mountPath: /media
             - name: config
-              mountPath: /config
-            - name: jellyfin-secret
-              mountPath: /config/secret
-              subPath: admin-password
+              mountPath: /config  # Mount NFS for configuration
           resources:
             requests:
               memory: "1Gi"
@@ -48,8 +45,5 @@ spec:
           persistentVolumeClaim:
             claimName: jellyfin-nfspvc
         - name: config
-          configMap:
-            name: jellyfin-config
-        - name: jellyfin-secret
-          secret:
-            secretName: jellyfin-user-credentials
+          persistentVolumeClaim:
+            claimName: jellyfin-config-pvc  

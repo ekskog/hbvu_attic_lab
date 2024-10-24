@@ -9,7 +9,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /mnt/usb/500/music
+    path: /mnt/usb/500/music  # This will hold your media files
     server: elite
   persistentVolumeReclaimPolicy: Retain
 ---
@@ -26,3 +26,31 @@ spec:
       storage: 500Gi
   storageClassName: ""
   volumeName: jellyfin-nfspv
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jellyfin-config-pv
+spec:
+  capacity:
+    storage: 5Gi  # You can adjust this size based on your needs
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/jellyfin-config  # Change this path as needed for configuration
+    server: elite
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config-pvc
+  namespace: jellyfin
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi  # Match the size of the PV above
+  storageClassName: ""
+  volumeName: jellyfin-config-pv

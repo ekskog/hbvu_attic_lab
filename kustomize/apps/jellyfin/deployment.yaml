@@ -46,4 +46,4 @@ spec:
             claimName: jellyfin-nfspvc
         - name: config
           persistentVolumeClaim:
-            claimName: jellyfin-config-pvc  
+            claimName: jellyfin-config-nfspvc  

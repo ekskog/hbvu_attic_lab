@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteMany  # Allow multiple pods to read/write
   nfs:
-    path: /mnt/nfs/elite/500/music  # Adjust this to your NFS path
+    path: /mnt/usb/500/music  # Adjust this to your NFS path
     server: elite  # Replace with your NFS server's IP address
 ---
 # jellyfin-pvc.yaml

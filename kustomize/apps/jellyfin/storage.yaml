@@ -30,7 +30,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: jellyfin-config-pv
+  name: jellyfin-config-nfspv
 spec:
   capacity:
     storage: 5Gi  # You can adjust this size based on your needs
@@ -44,7 +44,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyfin-config-pvc
+  name: jellyfin-config-nfspvc
   namespace: jellyfin
 spec:
   accessModes:
@@ -53,4 +53,4 @@ spec:
     requests:
       storage: 5Gi  # Match the size of the PV above
   storageClassName: ""
-  volumeName: jellyfin-config-pv
+  volumeName: jellyfin-config-nfspv

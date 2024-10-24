@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koel
+  namespace: koel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: koel
+  template:
+    metadata:
+      labels:
+        app: koel
+    spec:
+      containers:
+        - name: koel
+          image: koel/koel:latest
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: "192.168.1.11"  # Your AriaDB IP
+            - name: DB_PORT
+              value: "3306"  # Default MySQL port
+            - name: DB_DATABASE
+              value: "koel"  # Replace with your database name
+            - name: DB_USERNAME
+              value: "lucarv"  # Replace with your database username
+            - name: DB_PASSWORD
+              value: "lucaPWD4ma4iaDB"  # Replace with your database password
+          volumeMounts:
+            - name: media
+              mountPath: /media
+            - name: config
+              mountPath: /config
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: koel-nfspvc

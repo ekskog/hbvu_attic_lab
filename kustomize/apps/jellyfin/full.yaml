@@ -1,0 +1,71 @@
+# jellyfin-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: jellyfin-pv
+  namespace: jellyfin
+spec:
+  capacity:
+    storage: 100Gi  # Adjust as necessary
+  accessModes:
+    - ReadWriteMany  # Allow multiple pods to read/write
+  nfs:
+    path: /mnt/nfs/elite/500/music  # Adjust this to your NFS path
+    server: elite  # Replace with your NFS server's IP address
+---
+# jellyfin-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-pvc
+  namespace: jellyfin
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi  # Adjust as necessary
+---
+# jellyfin-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+      - name: jellyfin
+        image: jellyfin/jellyfin:latest
+        ports:
+        - containerPort: 8096
+        volumeMounts:
+        - name: jellyfin-storage
+          mountPath: /media
+      volumes:
+      - name: jellyfin-storage
+        persistentVolumeClaim:
+          claimName: jellyfin-pvc
+---
+# jellyfin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  type: LoadBalancer  # Use LoadBalancer if your environment supports it
+  ports:
+    - port: 8096
+      targetPort: 8096
+      protocol: TCP
+  selector:
+    app: jellyfin

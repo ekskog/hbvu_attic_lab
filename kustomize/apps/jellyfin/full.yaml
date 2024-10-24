@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: jellyfin-pv
+  name: jellyfin-nfspv
   namespace: jellyfin
 spec:
   capacity:
@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jellyfin-pvc
+  name: jellyfin-nfspvc
   namespace: jellyfin
 spec:
   accessModes:
@@ -25,6 +25,8 @@ spec:
   resources:
     requests:
       storage: 100Gi  # Adjust as necessary
+  storageClassName: ""
+  volumeName: jellyfin-nfspv
 ---
 # jellyfin-deployment.yaml
 apiVersion: apps/v1
@@ -53,7 +55,7 @@ spec:
       volumes:
       - name: jellyfin-storage
         persistentVolumeClaim:
-          claimName: jellyfin-pvc
+          claimName: jellyfin-nfspvc
 ---
 # jellyfin-service.yaml
 apiVersion: v1

@@ -3,6 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vue-app-config
+  namespace: webapps
 data:
   VUE_APP_API_URL: "https://bloptuplr.hbvu.su"
 ---

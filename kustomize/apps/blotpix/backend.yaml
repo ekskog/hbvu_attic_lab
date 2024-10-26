@@ -8,7 +8,7 @@ type: Opaque
 stringData:
   accessKey: lucarv
   secretKey: lucaPWD$MinI0
-  endpoint: 192.168.1.201
+  endpoint: minio-service.minio.svc.cluster.local
 ---
 apiVersion: v1
 kind: Service

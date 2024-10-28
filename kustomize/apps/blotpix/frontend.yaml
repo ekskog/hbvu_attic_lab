@@ -5,7 +5,7 @@ metadata:
   name: vue-app-config
   namespace: webapps
 data:
-  VUE_APP_API_URL: "blotpix-be"
+  VUE_APP_API_URL: blotpix-be 
 ---
 apiVersion: v1
 kind: Service

@@ -140,7 +140,7 @@ spec:
     spec:
       containers:
       - name: guacamole
-        image: jwetzell/guacamole:arm64
+        image: jwetzell/guacamole
         env:
         - name: EXTENSIONS
           value: auth-totp

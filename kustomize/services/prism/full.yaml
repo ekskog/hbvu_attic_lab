@@ -96,13 +96,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: photo-gallery
+  name: prism
   namespace: prism
-  annotations:
-    metallb.universe.tf/address-pool: default
 spec:
   selector:
-    app: photo-gallery
+    app: prism
   ports:
   - port: 80
     targetPort: 2342

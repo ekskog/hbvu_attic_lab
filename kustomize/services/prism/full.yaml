@@ -37,7 +37,7 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    path: /mnt/usb/500/minio/prism
+    path: /mnt/usb/500/prism
     server: ubumac
 ---
 # persistent-volume-claim.yaml

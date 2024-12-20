@@ -4,7 +4,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prism-config
-  namespace: webapps
+  namespace: prism
 data:
   prism_SITE_URL: "https://prism.hbvu.su"
   prism_ORIG_PATH: "/prism/originals"
@@ -20,7 +20,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: prism-secrets
-  namespace: webapps
+  namespace: prism
 type: Opaque
 stringData:
   admin-password: "lucaPWD$p4ism"  # Replace with your password
@@ -45,7 +45,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: prism-pvc
-  namespace: webapps
+  namespace: prism
 spec:
   accessModes:
     - ReadWriteMany
@@ -59,7 +59,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prism
-  namespace: webapps
+  namespace: prism
 spec:
   replicas: 1
   selector:
@@ -99,12 +99,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prism
-  namespace: webapps
+  namespace: prism
 spec:
   selector:
     app: prism
   ports:
-  - port: 80
+  - port: 2342
     targetPort: 2342
     protocol: TCP
   type: LoadBalancer

@@ -79,7 +79,7 @@ spec:
         - configMapRef:
             name: prism-config
         env:
-        - name: prism_ADMIN_PASSWORD
+        - name: PHOTOPRISM_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: prism-secrets

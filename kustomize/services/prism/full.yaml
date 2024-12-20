@@ -100,8 +100,6 @@ kind: Service
 metadata:
   name: prism
   namespace: webapps
-  annotations:
-    metallb.universe.tf/address-pool: default
 spec:
   selector:
     app: prism

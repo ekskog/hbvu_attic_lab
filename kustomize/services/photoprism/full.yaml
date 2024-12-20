@@ -1,0 +1,110 @@
+# namespace.yaml
+---
+# configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: photoprism-config
+  namespace: prism
+data:
+  PHOTOPRISM_SITE_URL: "https://prism.hbvu.su"
+  PHOTOPRISM_ORIG_PATH: "/photoprism/originals"
+  PHOTOPRISM_DISABLE_TLS: "false"
+  PHOTOPRISM_DISABLE_SETTINGS: "false"
+  PHOTOPRISM_DEFAULT_LOCALE: "en"
+  PHOTOPRISM_DATABASE_DRIVER: "mysql"
+  PHOTOPRISM_READONLY: "false"
+---
+# secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: photoprism-secrets
+  namespace: prism
+type: Opaque
+stringData:
+  admin-password: "lucaPWD$p4ism"  # Replace with your password
+---
+# persistent-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prism-pv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/usb/500/minio/prism
+    server: ubumac
+---
+# persistent-volume-claim.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prism-pvc
+  namespace: prism
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: ""
+---
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prism
+  namespace: prism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prism
+  template:
+    metadata:
+      labels:
+        app: prism
+    spec:
+      containers:
+      - name: prism
+        image: photoprism/photoprism:latest
+        ports:
+        - containerPort: 2342
+        envFrom:
+        - configMapRef:
+            name: photoprism-config
+        env:
+        - name: PHOTOPRISM_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: photoprism-secrets
+              key: admin-password
+        volumeMounts:
+        - name: photo-storage
+          mountPath: /photoprism/originals
+      volumes:
+      - name: photo-storage
+        persistentVolumeClaim:
+          claimName: prism-pvc
+---
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: photo-gallery
+  namespace: prism
+  annotations:
+    metallb.universe.tf/address-pool: default
+spec:
+  selector:
+    app: photo-gallery
+  ports:
+  - port: 80
+    targetPort: 2342
+    protocol: TCP
+  type: LoadBalancer

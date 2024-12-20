@@ -104,7 +104,7 @@ spec:
   selector:
     app: prism
   ports:
-  - port: 443
+  - port: 80
     targetPort: 2342
     protocol: TCP
   type: LoadBalancer

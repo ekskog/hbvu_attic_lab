@@ -1,21 +1,19 @@
-# namespace.yaml
-# configmap.yaml
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prism-config
   namespace: prism
 data:
-  prism_SITE_URL: "https://prism.hbvu.su"
-  prism_ORIG_PATH: "/prism/originals"
-  prism_STORAGE_PATH: "/prism/storage"
-  prism_DISABLE_TLS: "false"
-  prism_DISABLE_SETTINGS: "false"
-  prism_DEFAULT_LOCALE: "en"
-  prism_DATABASE_DRIVER: "sqlite"
-  prism_READONLY: "false"
+  PHOTOPRISM_SITE_URL: "https://prism.hbvu.su"
+  PHOTOPRISM_ORIG_PATH: "/photoprism/originals"
+  PHOTOPRISM_STORAGE_PATH: "/photoprism/storage"
+  PHOTOPRISM_DISABLE_TLS: "false"
+  PHOTOPRISM_DISABLE_SETTINGS: "false"
+  PHOTOPRISM_DEFAULT_LOCALE: "en"
+  PHOTOPRISM_DATABASE_DRIVER: "sqlite"
+  PHOTOPRISM_READONLY: "false"
 ---
-# secrets.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -23,9 +21,8 @@ metadata:
   namespace: prism
 type: Opaque
 stringData:
-  admin-password: "lucaPWD$p4ism"  # Replace with your password
+  admin-password: "lucaPWD$p4ism"
 ---
-# persistent-volume.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -40,7 +37,6 @@ spec:
     path: /mnt/usb/500/prism
     server: ubumac
 ---
-# persistent-volume-claim.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -54,7 +50,6 @@ spec:
       storage: 100Gi
   storageClassName: ""
 ---
-# deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -71,30 +66,34 @@ spec:
         app: prism
     spec:
       containers:
-      - name: prism
-        image: photoprism/photoprism:latest
-        ports:
-        - containerPort: 2342
-        envFrom:
-        - configMapRef:
-            name: prism-config
-        env:
-        - name: PHOTOPRISM_ADMIN_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: prism-secrets
-              key: admin-password
-        volumeMounts:
-        - name: photo-storage
-          mountPath: /prism/originals
-        - name: photo-storage
-          mountPath: /prism/storage
-      volumes:
-      - name: photo-storage
-        persistentVolumeClaim:
-          claimName: prism-pvc
+        - name: prism
+          image: photoprism/photoprism:latest
+          ports:
+            - containerPort: 2342
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          envFrom:
+            - configMapRef:
+                name: prism-config
+          env:
+            - name: PHOTOPRISM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prism-secrets
+                  key: admin-password
+          volumeMounts:
+            - name: photo-storage
+              mountPath: /photoprism
+          volumes:
+            - name: photo-storage
+              persistentVolumeClaim:
+                claimName: prism-pvc
 ---
-# service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -104,7 +103,7 @@ spec:
   selector:
     app: prism
   ports:
-  - port: 2342
-    targetPort: 2342
-    protocol: TCP
+    - port: 2342
+      targetPort: 2342
+      protocol: TCP
   type: LoadBalancer

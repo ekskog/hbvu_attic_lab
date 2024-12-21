@@ -89,10 +89,10 @@ spec:
           volumeMounts:
             - name: photo-storage
               mountPath: /photoprism
-          volumes:
-            - name: photo-storage
-              persistentVolumeClaim:
-                claimName: prism-pvc
+      volumes:
+        - name: photo-storage
+          persistentVolumeClaim:
+            claimName: prism-pvc
 ---
 apiVersion: v1
 kind: Service

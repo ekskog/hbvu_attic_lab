@@ -107,6 +107,7 @@ metadata:
   namespace: minio
 spec:
   type: LoadBalancer
+  loadBalancerIP: 192.168.1.200  
   ports:
     - name: s3-api
       port: 9000

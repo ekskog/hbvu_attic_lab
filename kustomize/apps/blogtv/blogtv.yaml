@@ -1,0 +1,115 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: blog-nfspv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/web/blog/posts
+    server: ubumac
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nolock 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blog-nfspvc
+  namespace: webapps
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: ""
+  volumeName: blog-nfspv
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: webapps
+  name: minio-credentials
+type: Opaque
+stringData:
+  accessKey: lucarv
+  secretKey: lucaPWD$MinI0
+  endpoint: minio-service.minio.svc.cluster.local
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: webapps
+  name: blogt-frontend
+spec:
+  selector:
+    app: blogt-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      name: http
+  type: LoadBalancer
+  externalTrafficPolicy: Local 
+  loadBalancerIP: 192.168.1.20  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: webapps
+  name: blogt-frontend
+  labels:
+    app: blogt-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blogt-frontend
+  template:
+    metadata:
+      labels:
+        app: blogt-frontend
+    spec:
+      securityContext:
+        runAsUser: 1000 
+        runAsGroup: 1000
+        fsGroup: 1000
+        allowPrivilegeEscalation: false
+      containers:
+        - name: blogt-frontend
+          image: lucarv/blogtv:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi" 
+              cpu: "500m" 
+          ports:
+            - containerPort: 80
+              name: blogt
+          volumeMounts:
+            - name: blogposts
+              mountPath: /app/posts
+      volumes:
+        - name: blogposts
+          persistentVolumeClaim:
+            claimName: blog-nfspvc
+      terminationGracePeriodSeconds: 30
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 80
+        initialDelaySeconds: 30
+        periodSeconds: 60
+        failureThreshold: 3
+      readinessProbe:
+        httpGet:
+          path: /readiness
+          port: 80
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        failureThreshold: 3

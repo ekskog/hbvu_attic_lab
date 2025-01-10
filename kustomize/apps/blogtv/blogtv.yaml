@@ -53,7 +53,7 @@ spec:
       name: http
   type: LoadBalancer
   externalTrafficPolicy: Local 
-  loadBalancerIP: 192.168.1.20  
+  loadBalancerIP: 192.168.1.204  
 ---
 apiVersion: apps/v1
 kind: Deployment

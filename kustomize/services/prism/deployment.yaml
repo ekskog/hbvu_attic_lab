@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prism
+  namespace: prism
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prism
+  template:
+    metadata:
+      labels:
+        app: prism
+    spec:
+      containers:
+        - name: prism
+          image: photoprism/photoprism:latest
+          ports:
+            - containerPort: 2342
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          envFrom:
+            - configMapRef:
+                name: prism-config
+          env:
+            - name: PHOTOPRISM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: prism-secrets
+                  key: admin-password
+          volumeMounts:
+            - name: photo-storage
+              mountPath: /photoprism
+      volumes:
+        - name: photo-storage
+          persistentVolumeClaim:
+            claimName: prism-pvc
+
+

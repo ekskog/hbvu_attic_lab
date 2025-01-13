@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: blog-nfspv
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/usb/500/web/blog/posts
+    server: ubumac
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nolock 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: blog-nfspvc
+  namespace: webapps
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: ""
+  volumeName: blog-nfspv

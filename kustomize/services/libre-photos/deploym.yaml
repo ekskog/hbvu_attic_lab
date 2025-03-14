@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librephotos-backend
+  namespace: librephotos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: librephotos-backend
+  template:
+    metadata:
+      labels:
+        app: librephotos-backend
+    spec:
+      containers:
+      - name: backend
+        image: reallibrephotos/librephotos:latest
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: SECRET_KEY
+        - name: DB_BACKEND
+          value: "postgresql"
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: POSTGRES_DB
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: POSTGRES_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: POSTGRES_PORT
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: REDIS_HOST
+        - name: REDIS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: librephotos-config
+              key: REDIS_PORT
+        ports:
+        - containerPort: 8001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: librephotos-backend
+  namespace: librephotos
+spec:
+  ports:
+    - port: 8001
+  selector:
+    app: librephotos-backend

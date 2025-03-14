@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-secret
+  namespace: minio
+type: Opaque
+data:
+  root-user: bHVjYXJ2
+  root-password: bHVjYVBXRCRNaW5JMA==

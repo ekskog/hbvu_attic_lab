@@ -1,71 +1,3 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: blog-nfspv
-spec:
-  capacity:
-    storage: 100Gi
-  accessModes:
-    - ReadWriteMany
-  nfs:
-    path: /mnt/usb/500/web/blog/posts
-    server: ubumac
-  persistentVolumeReclaimPolicy: Retain
-  mountOptions:
-    - nolock 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: blog-nfspvc
-  namespace: webapps
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 100Gi
-  storageClassName: ""
-  volumeName: blog-nfspv
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: webapps
-  name: minio-credentials
-type: Opaque
-stringData:
-  accessKey: lucarv
-  secretKey: lucaPWD$MinI0
-  endpoint: minio-service.minio.svc.cluster.local
----
-apiVersion: v1
-kind: Secret
-metadata:
-  namespace: webapps
-  name: editor-credentials
-type: Opaque
-stringData:
-  accessKey: lucarv
-  secretKey: lucaPWD$b10gt
-  sessionSecret: YV92ZXJ5X2xvbmdfcmFuZG9tX3N0cmluZ191c2VkX3RvX3Byb3RlY3RfYmxvZ3RfZWRpdG9y
----
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: webapps
-  name: blogt-editor
-spec:
-  selector:
-    app: blogt-editor
-  ports:
-    - protocol: TCP
-      port: 3000
-      name: http
-  type: LoadBalancer
-  externalTrafficPolicy: Local 
-  loadBalancerIP: 192.168.1.203  
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -128,6 +60,16 @@ spec:
                 secretKeyRef:
                   name: minio-credentials
                   key: endpoint
+            - name: MINIO_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: minioServiceURL
+            - name: BLOGT_EDITOR_SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: blogtEditorServiceName
           volumeMounts:
             - name: blogposts
               mountPath: /app/posts

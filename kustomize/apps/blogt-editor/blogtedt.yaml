@@ -83,11 +83,6 @@ spec:
       labels:
         app: blogt-editor
     spec:
-      securityContext:
-        runAsUser: 1000 
-        runAsGroup: 1000
-        fsGroup: 1000
-        allowPrivilegeEscalation: false
       containers:
         - name: blogt-editor
           image: lucarv/blogt-editor:latest

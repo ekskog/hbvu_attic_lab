@@ -32,11 +32,6 @@ spec:
       labels:
         app: blogt-api
     spec:
-      securityContext:
-        runAsUser: 1000 
-        runAsGroup: 1000
-        fsGroup: 1000
-        allowPrivilegeEscalation: false
       containers:
         - name: blogt-api
           image: lucarv/blogt-api:latest

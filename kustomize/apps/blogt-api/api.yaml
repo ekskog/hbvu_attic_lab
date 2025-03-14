@@ -58,18 +58,3 @@ spec:
         - name: blogposts
           persistentVolumeClaim:
             claimName: blog-nfspvc
-      terminationGracePeriodSeconds: 30
-      livenessProbe:
-        httpGet:
-          path: /healthz
-          port: 80
-        initialDelaySeconds: 30
-        periodSeconds: 60
-        failureThreshold: 3
-      readinessProbe:
-        httpGet:
-          path: /readiness
-          port: 80
-        initialDelaySeconds: 10
-        periodSeconds: 30
-        failureThreshold: 3

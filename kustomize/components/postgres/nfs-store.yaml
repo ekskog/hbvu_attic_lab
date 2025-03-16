@@ -4,7 +4,7 @@ metadata:
   name: postgres-pv
   labels:
     type: nfs
-    app: postgres  
+    app: postgres
 spec:
   capacity:
     storage: 5Gi
@@ -26,9 +26,9 @@ spec:
   selector:
     matchLabels:
       type: nfs
-      app: postgres    
+      app: postgres
   resources:
     requests:
       storage: 5Gi
-  storageClassName: nfs     
+  storageClassName: ""
   volumeName: postgres-pv

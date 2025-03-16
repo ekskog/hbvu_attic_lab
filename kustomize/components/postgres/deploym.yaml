@@ -18,7 +18,7 @@ spec:
         image: postgres:15  # You can change this to a different version if necessary
         env:
         - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata        
+          value: /var/lib/postgresql/data/pgdat
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:

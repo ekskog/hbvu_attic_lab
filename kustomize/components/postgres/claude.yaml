@@ -15,7 +15,7 @@ spec:
   storageClassName: ""
   nfs:
     server: mjolnir
-    path: /mnt/ext/2T/pg
+    path: /mnt/ext/2T/k3s-data/pg
 ---
 # Create a PersistentVolumeClaim to use the PV
 apiVersion: v1

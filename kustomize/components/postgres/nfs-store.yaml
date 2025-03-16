@@ -1,7 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgres-nfs-pv
+  name: postgres-pv
+  labels:
+    type: nfs
+    app: postgres  
 spec:
   capacity:
     storage: 5Gi
@@ -20,8 +23,12 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  selector:
+    matchLabels:
+      type: nfs
+      app: postgres    
   resources:
     requests:
       storage: 5Gi
-  storageClassName: ""      
-  volumeName: postgres-nfs-pv
+  storageClassName: nfs     
+  volumeName: postgres-pv

@@ -2,9 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: data  # Adjust as needed
+  namespace: data
 spec:
-  ports:
-    - port: 5432
   selector:
     app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+  type: ClusterIP

@@ -1,3 +1,15 @@
+# Create a ConfigMap for PostgreSQL configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: data
+data:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  # Additional PostgreSQL configuration can be added here
+---
+# Create a Secret for the PostgreSQL password
 apiVersion: v1
 kind: Secret
 metadata:
@@ -5,15 +17,5 @@ metadata:
   namespace: data
 type: Opaque
 data:
-  POSTGRES_USER: bHVjYXJ2
-  POSTGRES_PASSWORD: bHVjYVBXRDRwMHN0ZzQzcw==
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: postgres-config
-  namespace: data  # Change as needed
-data:
-  POSTGRES_DB: "postgres"  # The default database name
-  POSTGRES_HOST: "postgres"
-  POSTGRES_PORT: "5432"
+  # This is "postgres" encoded in base64, you should change this to a secure password
+  postgres-password: bHVjYVBXRAo=

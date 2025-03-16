@@ -1,3 +1,5 @@
+---
+# Create a PersistentVolume that points to your NFS server
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -7,14 +9,16 @@ metadata:
     app: postgres
 spec:
   capacity:
-    storage: 5Gi
+    storage: 200Gi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   nfs:
-    path: /mnt/ext/2T/k3s-data/pg
     server: mjolnir
+    path: /mnt/ext/2T/pg
 ---
+# Create a PersistentVolumeClaim to use the PV
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -23,12 +27,12 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 20Gi
   selector:
     matchLabels:
       type: nfs
       app: postgres
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: ""
-  volumeName: postgres-pv
+---

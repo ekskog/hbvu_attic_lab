@@ -14,6 +14,11 @@ spec:
       labels:
         app: postgres
     spec:
+      # Add security context to match your NFS anonymous uid/gid (1000:1000)
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: postgres
           image: postgres:15

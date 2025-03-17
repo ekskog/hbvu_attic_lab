@@ -28,7 +28,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: libre-photos-secret
-  namespace: default
+  namespace: libre
 type: Opaque
 stringData:
   # Replace with your actual credentials

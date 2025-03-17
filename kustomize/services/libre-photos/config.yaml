@@ -7,41 +7,20 @@ metadata:
   namespace: libre
 data:
   # Basic configuration
-  LIBR_SECRET_KEY: "Y2hhbmdlLXRoaXMtdG8tYS1yYW5kb20tc3RyaW5nCg=="
+  SECRET_KEY: "can-you-keep-a-secret-or-will-you-tell"
   DEBUG: "false"
   DISABLE_EXIF_THUMBNAIL: "false"
-  MAPBOX_API_KEY: ""
   
   # Frontend configuration
-  BACKEND_HOST: "http://libre-photos:8001"
-  CSRF_TRUSTED_ORIGINS: "https://photos.hbvu.su"
+  BACKEND_HOST: "http://libre-photos-backend:8000"
   
   # Database configuration - using PostgreSQL
   DB_BACKEND: "postgresql"
   
-  # Redis configuration - referencing existing service in data namespace
+  # Redis configuration
   REDIS_HOST: "redis.data.svc.cluster.local"
   REDIS_PORT: "6379"
----
-# Secret for sensitive information
-apiVersion: v1
-kind: Secret
-metadata:
-  name: libre-photos-secret
-  namespace: libre
-type: Opaque
-stringData:
-  # Replace with your actual credentials
-  ADMIN_EMAIL: "root@hbvu.su"
-  ADMIN_USERNAME: "root"
-  ADMIN_PASSWORD: "rootPWD$1ib43"
   
-  # PostgreSQL credentials - referencing existing service in data namespace
-  DB_HOST: "postgres.data.svc.cluster.local"
-  DB_NAME: "librephotos"
-  DB_USER: "lucarv"
-  DB_PASS: "lucaPWD41ib43"
-  DB_PORT: "5432"
-  
-  # Redis password if needed
-  REDIS_PASSWORD: ""
+  # Web server configuration
+  ALLOWED_HOSTS: "libre-photos-frontend,libre-photos-backend,localhost"
+  CSRF_TRUSTED_ORIGINS: "https://photos.hbvu.su"

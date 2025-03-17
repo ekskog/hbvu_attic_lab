@@ -1,22 +1,152 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-secret
-  namespace: data
-type: Opaque
-data:
-  POSTGRES_USER: bHVjYXJ2
-  POSTGRES_PASSWORD: bHVjYVBXRDQxaWI0Mw==  
 ---
+# PersistentVolume and PersistentVolumeClaim for storing photos
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: libr-photos-data
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: local-path # Default k3s storage class
+---
+# ConfigMap for libr-photos configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: librephotos-config
-  namespace: librephotos
+  name: libr-photos-config
+  namespace: default
 data:
-  POSTGRES_DB: "librephotos"
-  POSTGRES_HOST: "postgres.data.svc.cluster.local"  # Uses `data` namespace
-  POSTGRES_PORT: "5432"
-  REDIS_HOST: "redis.data.svc.cluster.local"  # Redis in `data` namespace
+  # Basic configuration
+  LIBR_SECRET_KEY: "change-this-to-a-random-string"
+  DEBUG: "false"
+  DISABLE_EXIF_THUMBNAIL: "false"
+  MAPBOX_API_KEY: ""
+  
+  # Frontend configuration - adjust if needed
+  BACKEND_HOST: "http://libr-photos:8001"
+  CSRF_TRUSTED_ORIGINS: "https://photos.hbvu.su"
+  
+  # Database configuration - using PostgreSQL
+  DB_BACKEND: "postgresql"
+  
+  # Redis configuration - referencing existing service in data namespace
+  REDIS_HOST: "redis.data.svc.cluster.local"
   REDIS_PORT: "6379"
-  SECRET_KEY: "your-secret-key"
+---
+# Secret for sensitive information
+apiVersion: v1
+kind: Secret
+metadata:
+  name: libr-photos-secret
+  namespace: default
+type: Opaque
+stringData:
+  # Replace with your actual credentials
+  ADMIN_EMAIL: "admin@example.com"
+  ADMIN_USERNAME: "admin"
+  ADMIN_PASSWORD: "change-this-to-secure-password"
+  
+  # PostgreSQL credentials - referencing existing service in data namespace
+  DB_HOST: "postgres.data.svc.cluster.local"
+  DB_NAME: "librephotos"
+  DB_USER: "librephotos"
+  DB_PASS: "librephotos-password"
+  DB_PORT: "5432"
+  
+  # Redis password if needed
+  REDIS_PASSWORD: ""
+---
+# Deployment for libr-photos
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: libr-photos
+  namespace: default
+  labels:
+    app: libr-photos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: libr-photos
+  template:
+    metadata:
+      labels:
+        app: libr-photos
+    spec:
+      containers:
+      - name: libr-photos
+        image: librephotos/librephotos:latest
+        ports:
+        - containerPort: 3000
+          name: frontend
+        - containerPort: 8001
+          name: backend
+        envFrom:
+        - configMapRef:
+            name: libr-photos-config
+        - secretRef:
+            name: libr-photos-secret
+        volumeMounts:
+        - mountPath: /data
+          name: libr-photos-data
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        readinessProbe:
+          httpGet:
+            path: /api/healthcheck/
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/healthcheck/
+            port: 8001
+          initialDelaySeconds: 60
+          periodSeconds: 20
+      volumes:
+      - name: libr-photos-data
+        persistentVolumeClaim:
+          claimName: libr-photos-data
+---
+# Internal ClusterIP Service for backend communication
+apiVersion: v1
+kind: Service
+metadata:
+  name: libr-photos
+  namespace: default
+spec:
+  selector:
+    app: libr-photos
+  ports:
+  - name: frontend
+    port: 3000
+    targetPort: 3000
+  - name: backend
+    port: 8001
+    targetPort: 8001
+  type: ClusterIP
+---
+# LoadBalancer Service for external access using MetalLB
+apiVersion: v1
+kind: Service
+metadata:
+  name: libr-photos-lb
+  namespace: default
+spec:
+  selector:
+    app: libr-photos
+  ports:
+  - name: frontend
+    port: 80
+    targetPort: 3000
+  type: LoadBalancer

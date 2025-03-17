@@ -1,0 +1,32 @@
+---
+# PersistentVolume for NFS storage
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: libr-photos-nfs-pv
+  namespace: default
+spec:
+  capacity:
+    storage: 1000Gi  # Adjust based on your NFS storage capacity
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storage
+  nfs:
+    server: your-nfs-server-ip  # Replace with your NFS server IP
+    path: /mnt/ext/2T/k3s-data/libre  # Path to your NFS export
+---
+# PersistentVolumeClaim for NFS storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: libr-photos-data
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1000Gi  # Adjust based on your needs
+  storageClassName: nfs-storage
+  volumeName: libr-photos-nfs-pv

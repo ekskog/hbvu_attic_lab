@@ -7,20 +7,19 @@ metadata:
   namespace: libre
 data:
   # Basic configuration
-  SECRET_KEY: "can-you-keep-a-secret-or-will-you-tell"
+  LIBR_SECRET_KEY: "canyoukeepasecret-orwillyoutell"
   DEBUG: "false"
   DISABLE_EXIF_THUMBNAIL: "false"
+  MAPBOX_API_KEY: ""
   
   # Frontend configuration
-  BACKEND_HOST: "http://libre-photos-backend:8000"
+  BACKEND_HOST: "http://libre-photos:8001"
+  CSRF_TRUSTED_ORIGINS: "https://photos.hbvu.su"
   
   # Database configuration - using PostgreSQL
   DB_BACKEND: "postgresql"
   
-  # Redis configuration
+  # Redis configuration - referencing existing service in data namespace
   REDIS_HOST: "redis.data.svc.cluster.local"
   REDIS_PORT: "6379"
-  
-  # Web server configuration
-  ALLOWED_HOSTS: "libre-photos-frontend,libre-photos-backend,localhost"
-  CSRF_TRUSTED_ORIGINS: "https://photos.hbvu.su"
+---

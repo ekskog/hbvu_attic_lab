@@ -33,8 +33,8 @@ spec:
         app: blogt-api
     spec:
       containers:
-        - name: blogt-api
-          image: lucarv/blogt-api:latest
+        - name: lucarv/blogt-api
+          image:  
           imagePullPolicy: Always
           resources:
             requests:

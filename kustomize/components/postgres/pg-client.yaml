@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: postgres-client
-  namespace: libre
+  namespace: photos
 spec:
   containers:
   - name: postgres-client
@@ -12,7 +12,7 @@ spec:
     - name: PGHOST
       value: "postgres-service.data.svc.cluster.local" # Replace with your PostgreSQL service's FQDN
     - name: PGUSER
-      value: "lucarv" # Replace with your PostgreSQL username
+      value: "postgres" # Replace with your PostgreSQL username
     - name: PGPASSWORD
-      value: "lucaPWD4p0stg43s" # Replace with your PostgreSQL password
+      value: "pgPWD4p0stg43s" # Replace with your PostgreSQL password
   restartPolicy: Always

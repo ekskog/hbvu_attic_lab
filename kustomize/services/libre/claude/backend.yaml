@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librephotos-backend
+  namespace: photos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: librephotos-backend
+  template:
+    metadata:
+      labels:
+        app: librephotos-backend
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: backend
+        image: reallibrephotos/backend:latest
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        envFrom:
+        - configMapRef:
+            name: librephotos-config
+        env:
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secrets
+              key: postgres-password
+        - name: LIBREPHOTOS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: librephotos-secrets
+              key: DJANGO_SECRET_KEY
+        volumeMounts:
+        - name: originals
+          mountPath: /media/originals
+        - name: thumbnails
+          mountPath: /media/thumbnails
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2
+            memory: 2Gi
+      volumes:
+      - name: originals
+        persistentVolumeClaim:
+          claimName: librephotos-media-originals
+      - name: thumbnails
+        persistentVolumeClaim:
+          claimName: librephotos-media-cache

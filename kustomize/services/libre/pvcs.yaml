@@ -1,0 +1,61 @@
+---
+# PersistentVolume for NFS storage
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: photos-pv
+spec:
+  capacity:
+    storage: 1000Gi  # Adjust based on your NFS storage capacity
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: mjolnir  # Replace with your NFS server IP
+    path: /mnt/ext/2T/k3s-data/photos  # Path to your NFS export
+---
+# This volume holds your photos.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: photos
+  namespace: photos
+spec:
+  resources:
+    requests:
+      storage: 1000Gi
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: ""
+  volumeName: photos-pv
+---
+# This volume contains thumbnails. Setting it to 10-15% the size of "photos" is probably reasonable.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: protected
+  namespace: photos
+spec:
+  resources:
+    requests:
+      storage: 30Gi
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: ""
+  volumeName: photos-pv
+---
+# The postgres volume holds all the metadata. If it's 1% the size of "photos," you're probably fine.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: data
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""
+  volumeName: photos-pv
+  accessModes:
+  - ReadWriteOnce

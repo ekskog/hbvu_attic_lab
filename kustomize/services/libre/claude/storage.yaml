@@ -1,0 +1,61 @@
+# PersistentVolume for Originals
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: photos-originals-pv
+spec:
+  capacity:
+    storage: 500Gi 
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: mjolnir
+    path: /mnt/ext/2T/k3s-data/photos/originals
+---
+# PersistentVolume for Thumbnails
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: photos-thumbnails-pv
+spec:
+  capacity:
+    storage: 50Gi 
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: mjolnir
+    path: /mnt/ext/2T/k3s-data/photos/thumbnails
+---
+# Persistent Volume Claim for Original Photos
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: librephotos-media-originals
+  namespace: photos
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: photos-originals-pv
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 500Gi
+---
+# Persistent Volume Claim for Thumbnails and Cache
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: librephotos-media-cache
+  namespace: photos
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeName: photos-thumbnails-pv
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 50Gi

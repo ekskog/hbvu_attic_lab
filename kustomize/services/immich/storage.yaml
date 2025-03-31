@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: immich-nfs-pv
+spec:
+  capacity:
+    storage: 1000Gi  # Adjust if needed
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/ext/2T/k3s-data/photos/immich  # Update to match your path
+    server: mjolnir  # Replace with the actual IP or hostname
+  mountOptions:
+    - nfsvers=4  # Ensure NFSv4 is used
+    - noatime    # Improves performance
+    - rw
+    - hard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: immich-pvc
+  namespace: photos
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Gi
+  volumeName: immich-nfs-pv
+  storageClassName: ""  # Use empty for static NFS provisioning

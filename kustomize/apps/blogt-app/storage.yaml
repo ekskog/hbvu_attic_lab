@@ -8,8 +8,8 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    path: /mnt/usb/500/web/blog/posts
-    server: ubumac
+    path: /var/lib/minio/web/blog/posts
+    server: mjolnir
   persistentVolumeReclaimPolicy: Retain
   mountOptions:
     - nolock 

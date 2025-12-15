@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-history
+  namespace: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal-history
+  template:
+    metadata:
+      labels:
+        app: temporal-history
+    spec:
+      containers:
+      - name: history
+        image: temporalio/server:1.22.4
+        ports:
+        - containerPort: 7234
+        env:
+        - name: SERVICES
+          value: "history"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: NUM_HISTORY_SHARDS
+          value: "512"
+        - name: DB
+          value: "postgres12"
+        - name: DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_DB
+        - name: VISIBILITY_DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_VISIBILITY_DB
+        - name: POSTGRES_SEEDS
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_HOST
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_PORT
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_USER
+        - name: POSTGRES_PWD
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_PASSWORD
+        - name: ENABLE_ES
+          value: "false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-history
+  namespace: temporal
+spec:
+  selector:
+    app: temporal-history
+  ports:
+  - port: 7234
+    targetPort: 7234
+  clusterIP: None

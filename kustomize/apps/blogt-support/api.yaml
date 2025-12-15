@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: blogt-api
 spec:
   selector:
@@ -18,7 +18,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: blogt-api
   labels:
     app: blogt-api

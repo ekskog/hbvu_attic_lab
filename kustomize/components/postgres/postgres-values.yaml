@@ -1,0 +1,31 @@
+# postgres-values.yaml
+auth:
+  username: temporal
+  password: temporal123
+  database: temporal
+
+primary:
+  persistence:
+    enabled: true
+    existingClaim: "data-postgres-postgresql-0"
+  
+  # Since your NFS is already configured with postgres UID/GID 999
+  podSecurityContext:
+    enabled: true
+    fsGroup: 999
+  
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 999
+    runAsNonRoot: true
+  
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+metrics:
+  enabled: false

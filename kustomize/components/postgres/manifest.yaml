@@ -1,19 +1,6 @@
-# 1. Persistent Volume Claim for Postgres Data
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pg-pvc
-  namespace: data
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: local-path
-
+# Postgres Deployment using existing NFS PV/PVC
 ---
-# 2. Postgres Deployment
+# 1. Postgres Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,53 +19,54 @@ spec:
       securityContext:
         fsGroup: 999  # PostgreSQL container's default user ID
       containers:
-      - name: postgres
-        image: postgres:15-alpine
-        securityContext:
-          runAsUser: 999  # PostgreSQL container's default user ID
-          runAsGroup: 999
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secrets
-              key: postgres-password
-        - name: POSTGRES_USER
-          value: postgres
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        ports:
-        - containerPort: 5432
-        volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-        readinessProbe:
-          exec:
-            command:
-            - pg_isready
-            - -h
-            - localhost
-            - -U
-            - postgres
-          initialDelaySeconds: 10
-          periodSeconds: 5
-        livenessProbe:
-          exec:
-            command:
-            - pg_isready
-            - -h
-            - localhost
-            - -U
-            - postgres
-          initialDelaySeconds: 15
-          periodSeconds: 10
+        - name: postgres
+          image: postgres:15-alpine
+          securityContext:
+            runAsUser: 999  # PostgreSQL container's default user ID
+            runAsGroup: 999
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secrets
+                  key: postgres-password
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -h
+                - localhost
+                - -U
+                - postgres
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -h
+                - localhost
+                - -U
+                - postgres
+            initialDelaySeconds: 15
+            periodSeconds: 10
       volumes:
-      - name: postgres-data
-        persistentVolumeClaim:
-          claimName: pg-pvc
-
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: data-postgres-postgresql-0  # Use existing PVC
 ---
-# 3. Postgres Service
+# 2. Postgres Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -91,9 +79,8 @@ spec:
     - port: 5432
       targetPort: 5432
   type: ClusterIP
-
 ---
-# 4. Postgres Secrets
+# 3. Postgres Secrets
 apiVersion: v1
 kind: Secret
 metadata:
@@ -101,4 +88,4 @@ metadata:
   namespace: data
 type: Opaque
 stringData:
-  postgres-password: pgPWD4p0stg43s
+  postgres-password: temporal123

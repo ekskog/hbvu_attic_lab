@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: blogt-frontend
   labels:
     app: blogt-frontend

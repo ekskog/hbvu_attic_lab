@@ -18,7 +18,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: blog-nfspvc
-  namespace: webapps
+  namespace: blogt
 spec:
   accessModes:
     - ReadWriteMany

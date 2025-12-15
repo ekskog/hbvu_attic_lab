@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temporal-schema-setup
+  namespace: temporal
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: schema-setup
+        image: temporalio/auto-setup:1.22.4
+        env:
+        - name: DB
+          value: "postgresql"
+        - name: POSTGRES_SEEDS
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_HOST
+        - name: POSTGRES_PORT
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_PORT
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_USER
+        - name: POSTGRES_PWD
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_PASSWORD
+        - name: DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_DB
+        - name: VISIBILITY_DBNAME
+          valueFrom:
+            secretKeyRef:
+              name: temporal-db
+              key: POSTGRES_VISIBILITY_DB
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Setting up temporal schema..."
+            temporal-sql-tool --plugin postgres12 --ep $POSTGRES_SEEDS -p $POSTGRES_PORT -u $POSTGRES_USER --pw $POSTGRES_PWD --db $DBNAME setup-schema -v 0.0
+            temporal-sql-tool --plugin postgres12 --ep $POSTGRES_SEEDS -p $POSTGRES_PORT -u $POSTGRES_USER --pw $POSTGRES_PWD --db $DBNAME update-schema -d /etc/temporal/schema/postgresql/v12/temporal/versioned
+            
+            echo "Setting up visibility schema..."
+            temporal-sql-tool --plugin postgres12 --ep $POSTGRES_SEEDS -p $POSTGRES_PORT -u $POSTGRES_USER --pw $POSTGRES_PWD --db $VISIBILITY_DBNAME setup-schema -v 0.0
+            temporal-sql-tool --plugin postgres12 --ep $POSTGRES_SEEDS -p $POSTGRES_PORT -u $POSTGRES_USER --pw $POSTGRES_PWD --db $VISIBILITY_DBNAME update-schema -d /etc/temporal/schema/postgresql/v12/visibility/versioned
+            
+            echo "Schema setup complete!"

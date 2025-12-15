@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: minio-credentials
 type: Opaque
 stringData:
@@ -12,7 +12,7 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: editor-credentials
 type: Opaque
 stringData:
@@ -23,7 +23,7 @@ stringData:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: webapps
+  namespace: blogt
   name: app-config
 data:
   minioServiceURL: minio-service.minio.svc.cluster.local

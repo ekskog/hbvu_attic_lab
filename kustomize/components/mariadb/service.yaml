@@ -1,3 +1,13 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: mariadb-service # Must match the Service name exactly
+  namespace: data
+subsets:
+  - addresses:
+      - ip: 192.168.1.8 # The server with MariaDB
+    ports:
+      - port: 3306
 ---
 apiVersion: v1
 kind: Service
@@ -5,10 +15,9 @@ metadata:
   name: mariadb-service
   namespace: data
 spec:
-  type: LoadBalancer
+  # No selector! This tells it to use your manual Endpoints
   ports:
-    - name: db-port
+    - protocol: TCP
       port: 3306
-      targetPort: mysql # Updated to match the deployment
-  selector:
-    app: mariadb
+      targetPort: 3306
+  type: ClusterIP

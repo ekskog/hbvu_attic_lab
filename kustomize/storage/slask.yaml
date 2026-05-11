@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-slask
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/external/2t/slask
+    server: mjolnir
+  persistentVolumeReclaimPolicy: Retain
+  mountOptions:
+    - nolock 

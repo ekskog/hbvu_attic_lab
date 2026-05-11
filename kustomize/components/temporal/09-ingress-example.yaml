@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: temporal-web-ingress
+  namespace: temporal
+  annotations:
+    # Adjust these annotations based on your ingress controller
+    # For Traefik (common in k3s):
+    # traefik.ingress.kubernetes.io/router.entrypoints: web
+    
+    # For nginx-ingress:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    
+    # For cert-manager (if using TLS):
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  # Uncomment and configure if you want TLS
+  # tls:
+  # - hosts:
+  #   - temporal.yourdomain.com
+  #   secretName: temporal-tls
+  rules:
+  - host: temporal.yourdomain.com  # Change this to your domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: temporal-web
+            port:
+              number: 8080
+---
+# Alternative: Use a LoadBalancer service type if your k3s has a load balancer
+# Uncomment below and delete/comment out the ClusterIP service in 08-web-ui.yaml
+#
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: temporal-web-lb
+#   namespace: temporal
+#   labels:
+#     app: temporal
+#     component: web
+# spec:
+#   type: LoadBalancer
+#   # If using MetalLB or similar, you can specify a loadBalancerIP:
+#   # loadBalancerIP: 192.168.1.100
+#   ports:
+#   - name: http
+#     port: 8080
+#     targetPort: 8080
+#     protocol: TCP
+#   selector:
+#     app: temporal
+#     component: web

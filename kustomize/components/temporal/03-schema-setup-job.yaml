@@ -1,0 +1,117 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temporal-schema-setup
+  namespace: temporal
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+      - name: create-databases
+        image: postgres:16
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          echo "Creating databases if they don't exist..."
+          
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -p $POSTGRES_PORT -d postgres <<EOF
+          SELECT 'CREATE DATABASE temporal' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'temporal')\gexec
+          SELECT 'CREATE DATABASE temporal_visibility' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'temporal_visibility')\gexec
+          EOF
+          
+          echo "Databases created successfully"
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_HOST
+        - name: POSTGRES_PORT
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_PORT
+      containers:
+      - name: setup-schema
+        image: temporalio/auto-setup:1.22.4
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          echo "Setting up Temporal schema..."
+          
+          # Setup main database schema
+          temporal-sql-tool \
+            --plugin postgres12 \
+            --ep $POSTGRES_HOST \
+            --port $POSTGRES_PORT \
+            --db temporal \
+            --user $POSTGRES_USER \
+            --password $POSTGRES_PASSWORD \
+            setup-schema -v 0.0
+          
+          temporal-sql-tool \
+            --plugin postgres12 \
+            --ep $POSTGRES_HOST \
+            --port $POSTGRES_PORT \
+            --db temporal \
+            --user $POSTGRES_USER \
+            --password $POSTGRES_PASSWORD \
+            update-schema -d /etc/temporal/schema/postgresql/v12/temporal/versioned
+          
+          # Setup visibility database schema
+          temporal-sql-tool \
+            --plugin postgres12 \
+            --ep $POSTGRES_HOST \
+            --port $POSTGRES_PORT \
+            --db temporal_visibility \
+            --user $POSTGRES_USER \
+            --password $POSTGRES_PASSWORD \
+            setup-schema -v 0.0
+          
+          temporal-sql-tool \
+            --plugin postgres12 \
+            --ep $POSTGRES_HOST \
+            --port $POSTGRES_PORT \
+            --db temporal_visibility \
+            --user $POSTGRES_USER \
+            --password $POSTGRES_PASSWORD \
+            update-schema -d /etc/temporal/schema/postgresql/v12/visibility/versioned
+          
+          echo "Schema setup completed successfully"
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_HOST
+        - name: POSTGRES_PORT
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_PORT

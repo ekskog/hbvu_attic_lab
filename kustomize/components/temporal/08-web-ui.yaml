@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-web
+  namespace: temporal
+  labels:
+    app: temporal
+    component: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal
+      component: web
+  template:
+    metadata:
+      labels:
+        app: temporal
+        component: web
+    spec:
+      containers:
+      - name: web
+        image: temporalio/ui:2.22.3
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: TEMPORAL_ADDRESS
+          value: temporal-frontend.temporal.svc.cluster.local:7233
+        - name: TEMPORAL_CORS_ORIGINS
+          value: http://localhost:3000
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-web
+  namespace: temporal
+  labels:
+    app: temporal
+    component: web
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: temporal
+    component: web

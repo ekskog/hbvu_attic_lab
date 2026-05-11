@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporal-worker
+  namespace: temporal
+  labels:
+    app: temporal
+    component: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: temporal
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: temporal
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: temporalio/server:1.22.4
+        ports:
+        - name: rpc
+          containerPort: 7239
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        env:
+        - name: SERVICES
+          value: worker
+        - name: TEMPORAL_BROADCAST_ADDRESS
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: temporal-postgres
+              key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: config
+          mountPath: /etc/temporal/config
+        livenessProbe:
+          tcpSocket:
+            port: rpc
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: rpc
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+      volumes:
+      - name: config
+        configMap:
+          name: temporal-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-worker
+  namespace: temporal
+  labels:
+    app: temporal
+    component: worker
+spec:
+  clusterIP: None
+  ports:
+  - name: rpc
+    port: 7239
+    targetPort: 7239
+    protocol: TCP
+  - name: membership
+    port: 6939
+    targetPort: 6939
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: temporal
+    component: worker
